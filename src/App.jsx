@@ -1996,9 +1996,6 @@ function App() {
 
     setCastScanning(true);
     setCastStatus('Scanning');
-    setSelectedCastDevice(null);
-    setCastPlaying(false);
-    setCastLoadedTrackId('');
     try {
       const result = await window.moonbounce.cast.rescan();
       setCastSupported(result.supported);
@@ -2930,30 +2927,6 @@ function App() {
                 </div>
               )}
             </section>
-
-            <form className="connect manual-plex-connect" onSubmit={connectToPlex}>
-              <label>
-                Plex server
-                <input
-                  value={serverUrl}
-                  onChange={(event) => setServerUrl(event.target.value)}
-                  placeholder="http://192.168.1.10:32400"
-                />
-              </label>
-              <label>
-                Token
-                <input
-                  value={token}
-                  onChange={(event) => setToken(event.target.value)}
-                  placeholder="X-Plex-Token"
-                  type="password"
-                />
-              </label>
-              <button className="primary" type="submit" disabled={loading || !serverUrl || !token}>
-                {loading ? <Loader2 className="spin" size={17} /> : <Wifi size={17} />}
-                Connect
-              </button>
-            </form>
 
             <div className="library-tools settings-library-tools">
               <div className="select-wrap">

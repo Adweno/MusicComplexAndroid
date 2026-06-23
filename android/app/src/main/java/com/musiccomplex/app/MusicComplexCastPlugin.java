@@ -470,8 +470,13 @@ public class MusicComplexCastPlugin extends Plugin {
         if (client == null) return;
         MediaQueueItem currentItem = client.getCurrentItem();
         if (currentItem == null || currentItem.getCustomData() == null) return;
-        int nextIndex = currentItem.getCustomData().optInt("appIndex", -1);
-        if (nextIndex >= 0 && nextIndex < castQueue.size()) {
+        int appIndex = currentItem.getCustomData().optInt("appIndex", -1);
+        int[] appIndices = new int[castQueue.size()];
+        for (int index = 0; index < castQueue.size(); index += 1) {
+            appIndices[index] = castQueue.get(index).appIndex;
+        }
+        int nextIndex = MusicComplexPlayerRules.castQueueLocalIndexForAppIndex(appIndices, appIndex);
+        if (nextIndex >= 0) {
             castQueueIndex = nextIndex;
         }
     }

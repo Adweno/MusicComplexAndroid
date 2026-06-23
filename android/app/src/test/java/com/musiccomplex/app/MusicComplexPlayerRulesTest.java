@@ -67,4 +67,11 @@ public class MusicComplexPlayerRulesTest {
         assertEquals(42, MusicComplexPlayerRules.clampPercent(42));
         assertEquals(100, MusicComplexPlayerRules.clampPercent(120));
     }
+
+    @Test
+    public void castQueueMapsOriginalAppIndexToLocalWindowIndex() {
+        assertEquals(0, MusicComplexPlayerRules.castQueueLocalIndexForAppIndex(new int[] { 45, 46, 47 }, 45));
+        assertEquals(2, MusicComplexPlayerRules.castQueueLocalIndexForAppIndex(new int[] { 45, 46, 47 }, 47));
+        assertEquals(-1, MusicComplexPlayerRules.castQueueLocalIndexForAppIndex(new int[] { 45, 46, 47 }, 12));
+    }
 }

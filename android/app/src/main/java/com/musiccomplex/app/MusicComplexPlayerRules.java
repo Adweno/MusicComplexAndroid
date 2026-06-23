@@ -30,4 +30,12 @@ final class MusicComplexPlayerRules {
     static int clampPercent(int value) {
         return Math.max(0, Math.min(100, value));
     }
+
+    static int castQueueLocalIndexForAppIndex(int[] appIndices, int appIndex) {
+        if (appIndices == null || appIndex < 0) return -1;
+        for (int index = 0; index < appIndices.length; index += 1) {
+            if (appIndices[index] == appIndex) return index;
+        }
+        return -1;
+    }
 }
