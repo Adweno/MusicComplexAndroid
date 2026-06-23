@@ -1,8 +1,8 @@
 const PLEX_HEADERS = {
   Accept: 'application/json',
   'X-Plex-Product': 'Music Complex',
-  'X-Plex-Client-Identifier': 'music-complex-desktop',
-  'X-Plex-Platform': 'Electron',
+  'X-Plex-Client-Identifier': 'music-complex-mobile',
+  'X-Plex-Platform': 'Android',
 };
 
 export function normalizeServerUrl(url) {
