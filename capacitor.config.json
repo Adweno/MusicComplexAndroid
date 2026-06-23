@@ -1,0 +1,10 @@
+{
+  "appId": "com.musiccomplex.app",
+  "appName": "Music Complex",
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}

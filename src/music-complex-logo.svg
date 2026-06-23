@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Music Complex logo">
+  <defs>
+    <linearGradient id="mc-bg" x1="20" y1="14" x2="108" y2="116" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#233641"/>
+      <stop offset="1" stop-color="#11171f"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#mc-bg)"/>
+  <path fill="#37d5bf" d="M30 88V40h12l22 27 22-27h12v48H84V61L64 85 44 61v27H30z"/>
+  <path fill="#f3f0e8" d="M91 88c-14 0-25-11-25-24s11-24 25-24c8 0 15 3 20 9l-9 8c-3-3-6-5-11-5-7 0-13 5-13 12s6 12 13 12c5 0 8-2 11-5l9 8c-5 6-12 9-20 9z"/>
+  <path fill="#37d5bf" d="M91 58l13 8-13 8V58z"/>
+</svg>
