@@ -160,6 +160,8 @@ function App() {
   const systemVolumeTimerRef = useRef(null);
   const autoTransportRef = useRef(null);
   const autoLastMediaCommandRef = useRef({ mediaId: '', time: 0 });
+  const autoCatalogSignatureRef = useRef('');
+  const autoCatalogTimerRef = useRef(null);
   const trackListRef = useRef(null);
   const mobileTouchStartRef = useRef(null);
   const queueRef = useRef([]);
@@ -2301,7 +2303,7 @@ function App() {
         ...plexResourceUrls(selectedAutoServer),
       ].filter((url, index, values) => url && values.indexOf(url) === index)
       : (settings.plexServerUrls || [settings.serverUrl]);
-    window.moonbounce.auto.catalog({
+    const autoPayload = {
       ...attachPlayableUrlsToCatalog(catalog, [], playableUrl, (path) => coverUrl({ thumb: path })),
       plex: {
         serverUrl: settings.serverUrl,
@@ -2310,8 +2312,23 @@ function App() {
         token: settings.token,
         matchVolume,
       },
-    }).catch(() => {});
+    };
+    const signature = JSON.stringify(autoPayload);
+    if (signature === autoCatalogSignatureRef.current) return;
+    autoCatalogSignatureRef.current = signature;
+    if (autoCatalogTimerRef.current) clearTimeout(autoCatalogTimerRef.current);
+    autoCatalogTimerRef.current = setTimeout(() => {
+      autoCatalogTimerRef.current = null;
+      window.moonbounce.auto.catalog(autoPayload).catch(() => {});
+    }, 250);
   }, [artists, playlists, autoLibraryAlbums, plexServers, settings.serverUrl, settings.plexServerId, settings.plexServerUrls, settings.token, matchVolume]);
+
+  useEffect(() => () => {
+    if (autoCatalogTimerRef.current) {
+      clearTimeout(autoCatalogTimerRef.current);
+      autoCatalogTimerRef.current = null;
+    }
+  }, []);
 
   async function pollCastStatus({ alive = true, advanceQueue = false, fallbackOnFailure = false } = {}) {
       if (castStatusPollingRef.current) {

@@ -27,6 +27,12 @@ final class MusicComplexAutoRules {
         return itemCount > PLAYLIST_PAGE_SIZE;
     }
 
+    static boolean catalogSignatureChanged(String previousSignature, String nextSignature) {
+        if (previousSignature == null) previousSignature = "";
+        if (nextSignature == null) nextSignature = "";
+        return !previousSignature.equals(nextSignature);
+    }
+
     static int audioCacheWindowEndExclusive(int currentIndex, int itemCount) {
         if (currentIndex < 0 || itemCount <= 0) return 0;
         return Math.min(itemCount, currentIndex + AUDIO_PREFETCH_COUNT + 1);

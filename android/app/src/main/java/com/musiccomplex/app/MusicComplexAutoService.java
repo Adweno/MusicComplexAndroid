@@ -152,6 +152,7 @@ public class MusicComplexAutoService extends MediaLibraryService {
 
     static void updateCatalog(JSObject payload) {
         AutoCatalog nextCatalog = AutoCatalog.fromJson(payload);
+        String previousBrowseSignature = catalog.browseSignature();
         saveConnectionToPrefs(payload);
         if (nextCatalog.isEmpty() && !catalog.isEmpty()) {
             catalog.updateConnection(nextCatalog);
@@ -160,14 +161,19 @@ public class MusicComplexAutoService extends MediaLibraryService {
             JSObject bootstrap = catalog.bootstrapJson();
             catalog = AutoCatalog.fromJson(bootstrap);
             saveCatalogToPrefs(bootstrap);
-            notifyCatalogChanged();
+            if (MusicComplexAutoRules.catalogSignatureChanged(previousBrowseSignature, catalog.browseSignature())) {
+                notifyCatalogChanged();
+            }
             return;
         }
+        String nextBrowseSignature = nextCatalog.browseSignature();
         catalog = nextCatalog;
         MusicComplexAutoService service = activeService;
         if (service != null) service.applyMatchVolume();
         saveCatalogToPrefs(payload);
-        notifyCatalogChanged();
+        if (MusicComplexAutoRules.catalogSignatureChanged(previousBrowseSignature, nextBrowseSignature)) {
+            notifyCatalogChanged();
+        }
     }
 
     // Phone playback and Chromecast retain their own sessions. Android Auto playback is fully
@@ -887,6 +893,20 @@ public class MusicComplexAutoService extends MediaLibraryService {
             return !serverUrl.isEmpty() && !token.isEmpty();
         }
 
+        String browseSignature() {
+            StringBuilder builder = new StringBuilder();
+            appendSignature(builder, "playlists", playlists);
+            appendSignature(builder, "artists", artists);
+            appendSignature(builder, "albums", albums);
+            appendSignature(builder, "songs", songs);
+            return builder.toString();
+        }
+
+        private void appendSignature(StringBuilder builder, String label, List<AutoItem> items) {
+            builder.append(label).append(':').append(items.size()).append('|');
+            for (AutoItem item : items) builder.append(item.browseSignature()).append('\n');
+        }
+
         synchronized void updateConnection(AutoCatalog source) {
             if (!source.serverUrl.isEmpty()) serverUrl = source.serverUrl;
             if (!source.serverId.isEmpty()) serverId = source.serverId;
@@ -1551,6 +1571,23 @@ public class MusicComplexAutoService extends MediaLibraryService {
                 Log.w(TAG, "Could not serialize Android Auto item " + id, error);
             }
             return object;
+        }
+
+        String browseSignature() {
+            return safe(id)
+                + '\u001f' + safe(sourceId)
+                + '\u001f' + safe(title)
+                + '\u001f' + safe(subtitle)
+                + '\u001f' + safe(album)
+                + '\u001f' + safe(parentId)
+                + '\u001f' + safe(key)
+                + '\u001f' + leafCount
+                + '\u001f' + browsable
+                + '\u001f' + playable;
+        }
+
+        private String safe(String value) {
+            return value == null ? "" : value;
         }
 
         MediaItem toMediaItem(@Nullable MusicComplexArtworkCache cache, boolean nowPlayingArtwork) {

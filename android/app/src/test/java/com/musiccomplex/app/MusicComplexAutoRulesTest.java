@@ -44,4 +44,11 @@ public class MusicComplexAutoRulesTest {
         assertEquals(0, MusicComplexAutoRules.audioCacheWindowEndExclusive(-1, 20));
         assertEquals(0, MusicComplexAutoRules.audioCacheWindowEndExclusive(0, 0));
     }
+
+    @Test
+    public void catalogSignatureOnlyChangesForDifferentBrowseContent() {
+        assertFalse(MusicComplexAutoRules.catalogSignatureChanged("artists:a", "artists:a"));
+        assertFalse(MusicComplexAutoRules.catalogSignatureChanged(null, ""));
+        assertTrue(MusicComplexAutoRules.catalogSignatureChanged("artists:a", "artists:b"));
+    }
 }
